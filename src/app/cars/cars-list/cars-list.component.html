@@ -2,9 +2,10 @@
   <div class="row">
     <div class="col-sm-12">
       <table
-        *ngIf="cars.length > 0; else noCarsInfo"  
+        *ngIf="cars && cars.length > 0; else noCarsInfo"   
         class="cs-table table table-striped"
       >
+        <!-- część wspólna z cars i cars.length po to by nie wykonywał się if, jeśli tablica nie jest jeszcze wczytana -->
         <thead>
           <tr>
             <th>car</th>
@@ -18,12 +19,14 @@
         </thead>
         <tbody>
           <tr *ngFor="let car of cars; let i = index">
-            <td [ngClass]="{'row-error' : car.isFullyDamaged }"> {{ car.model }} </td>
-            <td> {{ car.plate }} </td>
-            <td> {{ car.deliveryDate }} </td>
-            <td> {{ car.deadline }} </td>
-            <td> {{ car.client.firstName }} {{ car.client.surname }}</td>
-            <td> {{ car.cost }} </td>
+            <td [ngClass]="{'row-error' : car.isFullyDamaged }"> {{ car?.model }} </td> 
+            <!-- ? przed propercją "elvis operator" jest zabezpieczeniem przed asynchronicznmy wczytaniem i iterowaniem po pustej tablicy, 
+              angular zaczeka, aż propercje dostaną wartości  -->
+            <td> {{ car?.plate }} </td>
+            <td> {{ car?.deliveryDate }} </td>
+            <td> {{ car?.deadline }} </td> 
+            <td> {{ car?.clientFirstName }} {{ car?.clientSurname }}</td>
+            <td> {{ car?.cost }} </td>
             <td> Action placeholder </td>
           </tr>
         </tbody>
@@ -33,12 +36,22 @@
           <p> No cars in the service </p>
         </div>
       </ng-template>
-    </div>
+    </div> 
   </div>
   <div class="row">
     <div class="col-sm-12">
+      <button (click)="showGross()" class="btn btn-primary btn-sm float-right">
+        SHOW GROSS
+      </button>
+    </div>
+  </div>
+  <cs-total-cost #totalCostRef [totalCost]="totalCost" (shownGross)="onShownGross($event)"></cs-total-cost>
+    <!-- zagnieżdżenie komponentu total-cost w car-list -->
+    <!-- parametr $event reprezentuje wyemitowane dane, event emitter wysyła dane, tutaj je odbieramy -->
+  <div class="row" *ngIf="grossCost">
+    <div class="col-sm-12">
       <div class="total-cost">
-          <p class="text-right"> Total cost: {{ totalCost  }} PLN</p>
+        <p class="text-right">TOTAL GROSS COST: {{ grossCost }} PLN</p>
       </div>
     </div>
   </div>
