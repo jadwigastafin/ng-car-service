@@ -22,3 +22,4 @@ import { CoreModule } from './core-module/core.module'
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+ 
