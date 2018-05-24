@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, AfterViewInit } from '
 import { Car } from '../models/car';
 import { TotalCostComponent } from '../total-cost/total-cost.component';
 import { CarsService } from '../cars.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cars-list',
@@ -15,7 +16,9 @@ export class CarsListComponent implements OnInit, AfterViewInit { //implementuje
   totalCost : number;
   cars : Car[];
 
-  constructor(private carsService: CarsService) { } //konstruktor jest inicjalizowany jeszcze przed stworzeniem komponentu
+  constructor(private carsService : CarsService,
+              private router : Router) {}
+  //konstruktor jest inicjalizowany jeszcze przed stworzeniem komponentu
   //servisy wstrzykijemy do konstruktorów
 
   ngOnInit() {  //co się dzieje na starcie budowania komponentu
@@ -32,6 +35,10 @@ export class CarsListComponent implements OnInit, AfterViewInit { //implementuje
       this.countPrice();  //tutaj wywołanie countPrice żeby wcześniej wczytała się tablica samochodów a potem policzył koszt -> zabezp. przed asynchronicznością
     })
   }
+
+  goToCarDetails(car : Car) {
+    this.router.navigate(['/cars', car.id])
+  }  
 
   showGross() : void {
     this.totalCostRef.showGross(); //w ten sposób wywołujemy metodę z zagnieżdżonego komponentu w komponencie rodzica

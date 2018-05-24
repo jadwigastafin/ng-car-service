@@ -3,7 +3,7 @@
 <!--  levels, content te same nazwy atrybutów co w headerComponent -->
   <div content> 
     <p>
-      SOME TEXT
+      List of cars in service
     </p>
   </div>
 </cs-header>
@@ -28,7 +28,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let car of cars; let i = index">
+          <tr 
+            *ngFor="let car of cars; let i = index" 
+            class="row-car"
+            (click)="goToCarDetails(car)"
+          > 
+              <!-- car.id to PARAMS, car.id jest pobrane z car w pętli ngFor-->
+              
             <td [ngClass]="{'row-error' : car.isFullyDamaged }"> {{ car?.model }} </td> 
             <!-- ? przed propercją "elvis operator" jest zabezpieczeniem przed asynchronicznmy wczytaniem i iterowaniem po pustej tablicy, 
               angular zaczeka, aż propercje dostaną wartości  -->
