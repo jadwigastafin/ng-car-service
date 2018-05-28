@@ -3,6 +3,7 @@ import { Car } from '../models/car';
 import { TotalCostComponent } from '../total-cost/total-cost.component';
 import { CarsService } from '../cars.service';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'cars-list',
@@ -15,14 +16,34 @@ export class CarsListComponent implements OnInit, AfterViewInit { //implementuje
   grossCost : number;
   totalCost : number;
   cars : Car[];
+  carForm : FormGroup;
 
   constructor(private carsService : CarsService,
+              private formBuilder : FormBuilder,
               private router : Router) {}
   //konstruktor jest inicjalizowany jeszcze przed stworzeniem komponentu
   //servisy wstrzykijemy do konstruktorów
 
   ngOnInit() {  //co się dzieje na starcie budowania komponentu
     this.loadCars(); //w ngOnInit najlepiej zostawić samo wywołanie metod
+    this.carForm = this.buildCarForm();
+  }
+
+  buildCarForm() {
+    return this.formBuilder.group({
+      model: ["", Validators.required],
+      type: "",
+      plate: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(7)]],
+      deliveryDate: "",
+      deadline: "",
+      color: "",
+      power: "",
+      clientFirstName: "",
+      clientSurname: "",
+      cost: "",
+      isFullyDamaged: "",
+      year: ""
+    });
   }
 
   ngAfterViewInit() {  //inicjalizuje się kiedy zbuduje się już widok
@@ -33,6 +54,12 @@ export class CarsListComponent implements OnInit, AfterViewInit { //implementuje
     this.carsService.getCars().subscribe((cars) => {
       this.cars = cars;
       this.countPrice();  //tutaj wywołanie countPrice żeby wcześniej wczytała się tablica samochodów a potem policzył koszt -> zabezp. przed asynchronicznością
+    })
+  }
+
+  addCar() {
+    this.carsService.addCar(this.carForm.value).subscribe(() => {
+      this.loadCars();
     })
   }
 
