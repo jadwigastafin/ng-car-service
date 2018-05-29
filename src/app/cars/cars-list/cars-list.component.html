@@ -32,25 +32,30 @@
             *ngFor="let car of cars; let i = index" 
             class="row-car"
             (click)="goToCarDetails(car)"
+            
           > 
               <!-- car.id to PARAMS, car.id jest pobrane z car w pętli ngFor-->
               
-            <td [ngClass]="{'row-error' : car.isFullyDamaged }"> {{ car?.model }} </td> 
+            <td [ngClass]="{'row-error' : car.isFullyDamaged }" 
+              csImportant
+            > 
+              {{ car?.model | uppercase }}
+            </td> 
             <!-- ? przed propercją "elvis operator" jest zabezpieczeniem przed asynchronicznmy wczytaniem i iterowaniem po pustej tablicy, 
               angular zaczeka, aż propercje dostaną wartości  -->
             <td> {{ car?.plate }} </td>
-            <td> {{ car?.deliveryDate }} </td>
-            <td> {{ car?.deadline }} </td> 
-            <td> {{ car?.clientFirstName }} {{ car?.clientSurname }}</td>
-            <td> {{ car?.cost }} </td>
-            <td> Action placeholder </td>
+            <td> {{ car?.deliveryDate | date:'shortDate' }} </td>
+            <td> {{ car?.deadline | date:'shortDate' }} </td> 
+            <td> {{ car?.clientFirstName }} {{ car?.clientSurname | surnameShortcut }}</td>
+            <td csImportant> {{ car?.cost | currency:'PLN':true }} </td>
+            <td (click)="deleteCar(car, $event)"> ( X ) </td>
           </tr>
         </tbody>
       </table>
       <ng-template #noCarsInfo> 
         <div class="no-cars-info">
           <p> No cars in the service </p>
-        </div>
+        </div> 
       </ng-template>
     </div> 
   </div>
@@ -147,9 +152,4 @@
       </div>
     </div>
   </form>
-
-  <pre> {{ carForm.value | json }} </pre>
-  <pre> Czy walidacja modelu się powiodła: {{ carForm.get('model').valid | json }}</pre>
-  <pre> Czy walidacja tablic się powiodła: {{ carForm.get('plate').valid | json }}</pre>
-
 </div>

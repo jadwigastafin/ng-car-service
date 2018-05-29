@@ -63,6 +63,13 @@ export class CarsListComponent implements OnInit, AfterViewInit { //implementuje
     })
   }
 
+  deleteCar(car : Car, event) {
+    event.stopPropagation();
+    this.carsService.deleteCar(car.id).subscribe(() => {
+      this.loadCars();
+    })
+  }
+
   goToCarDetails(car : Car) {
     this.router.navigate(['/cars', car.id])
   }  

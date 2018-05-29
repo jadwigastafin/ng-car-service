@@ -30,4 +30,8 @@ export class CarsService {
       .map((res) => res.json())
   }
 
+  deleteCar(id: number) : Observable<Car> {
+    return this.http.delete(this.apiUrl + `/${id}`)
+      .map((res) => res.json())
+  }
 }
